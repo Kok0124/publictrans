@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/asphalt"
+    tools:context=".ParkoloActivity"
+    >
+
+
+
+    <View
+        android:id="@+id/divider3"
+        android:layout_width="150dp"
+        android:layout_height="10dp"
+        android:background="#1f0000"
+        app:layout_constraintBottom_toTopOf="@+id/car4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car2" />
+
+    <ImageButton
+        android:id="@+id/car6"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginEnd="32dp"
+        android:layout_marginBottom="130dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/redcar" />
+
+    <ImageButton
+        android:id="@+id/car2"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/redcar"
+        android:clickable="true"/>
+
+    <ImageButton
+        android:id="@+id/car4"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintBottom_toTopOf="@+id/car6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car2"
+        app:srcCompat="@drawable/redcar"
+        android:clickable="true"/>
+
+    <Button
+        android:id="@+id/refresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="40dp"
+        android:text="Refresh"
+        android:textColor="#FFFFFF"
+        app:backgroundTint="#605F5F"
+        app:layout_constraintBottom_toTopOf="@+id/car1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/reserve"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="40dp"
+        android:text="Reserve"
+        android:textColor="#FFFFFF"
+        app:backgroundTint="#605F5F"
+        app:layout_constraintBottom_toTopOf="@+id/car2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="150dp"
+        android:layout_height="10dp"
+        android:background="#1f0000"
+        app:layout_constraintBottom_toTopOf="@+id/car6"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car4" />
+
+    <View
+        android:id="@+id/divider4"
+        android:layout_width="150dp"
+        android:layout_height="10dp"
+        android:background="#1f0000"
+        app:layout_constraintBottom_toTopOf="@+id/car5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car3"
+        app:tint="@color/black" />
+
+    <View
+        android:id="@+id/divider2"
+        android:layout_width="150dp"
+        android:layout_height="10dp"
+        android:background="#1f0000"
+        app:layout_constraintBottom_toTopOf="@+id/car3"
+        app:layout_constraintTop_toBottomOf="@+id/car1"
+        tools:layout_editor_absoluteX="1dp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="68dp"
+        android:text="1."
+        android:textColor="#FAF604"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/divider2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car1" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="68dp"
+        android:text="2."
+        android:textColor="#FAF604"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/divider3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car2" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="68dp"
+        android:text="4."
+        android:textColor="#FAF604"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car4" />
+
+    <TextView
+        android:id="@+id/textView7"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginEnd="68dp"
+        android:text="6."
+        android:textColor="#FAF604"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car6" />
+
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="68dp"
+        android:text="3."
+        android:textColor="#FAF604"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/divider4"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car3" />
+
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="68dp"
+        android:layout_marginTop="5dp"
+        android:text="5."
+        android:textColor="#FAF604"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car5" />
+
+    <ImageButton
+        android:id="@+id/car1"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="100dp"
+        android:src="@drawable/redcar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/car5"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginBottom="130dp"
+        android:src="@drawable/redcar"
+        android:text="Button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageButton
+        android:id="@+id/car3"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="32dp"
+        android:clickable="true"
+        app:layout_constraintBottom_toTopOf="@+id/car5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car1"
+        app:srcCompat="@drawable/redcar" />
+
+    <Button
+        android:id="@+id/myReservation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My reservation"
+        android:textColor="#FFFFFF"
+        app:backgroundTint="#605F5F"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/car6" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
