@@ -1,6 +1,6 @@
 package com.example.publictrans
 
-import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -8,8 +8,18 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken
+import org.eclipse.paho.client.mqttv3.MqttException
+import org.eclipse.paho.client.mqttv3.MqttMessage
+import android.util.Log
+import org.eclipse.paho.android.service.MqttAndroidClient
+import org.eclipse.paho.client.mqttv3.*
+
 class ParkoloActivity : AppCompatActivity() {
-    @SuppressLint("UseCompatLoadingForDrawables")
+    //@SuppressLint("UseCompatLoadingForDrawables")
+
+    private lateinit var mqttClient: MqttAndroidClient
+
 
     companion object{
         const val LOGGED_IN="LOGGED_IN"
@@ -22,11 +32,15 @@ class ParkoloActivity : AppCompatActivity() {
         const val PARKINGLOT="PARKING_LOT"
         const val RESERVEDTRUE="RESERVEDTRUE"
         const val BACK="BACK"
+        const val TAG = "AndroidMqttClient"
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_parkolo)
+
+        connect(this)
 
         val loggedIn=this.intent.getIntExtra(LOGGED_IN, -1)
         val back=this.intent.getIntExtra(BACK, -1)
@@ -71,6 +85,12 @@ class ParkoloActivity : AppCompatActivity() {
         val refresh = findViewById<Button>(R.id.refresh)
         refresh.setOnClickListener{
             //TODO: Communicate with MQTT!!!
+
+            // Ez itt teszt volt, átmegy az üzenet. Ami kell még hogy subscribe alapján állitsa be a foglaltsagot
+            // Nem tudom pontosan milyen adat jön a szenzorból, ezt majd akkor tudjuk csak emgcisnálni majd
+            subscribe("testtopic/tesztelem")
+
+
 
 
             //TODO: Make changes accordingly
@@ -196,4 +216,103 @@ class ParkoloActivity : AppCompatActivity() {
 
 
     }
+
+    private fun printmsg(msg : String) {
+        print(msg)
+
+    }
+
+    private fun connect(context: Context) {
+        val serverURI = "tcp://broker.hivemq.com:1883"
+        mqttClient = MqttAndroidClient(context, serverURI, "kotlin_client")
+        mqttClient.setCallback(object : MqttCallback {
+            override fun messageArrived(topic: String?, message: MqttMessage?) {
+                Log.d(TAG, "Receive message: ${message.toString()} from topic: $topic")
+                printmsg(message.toString())
+            }
+
+            override fun connectionLost(cause: Throwable?) {
+                Log.d(TAG, "Connection lost ${cause.toString()}")
+            }
+
+            override fun deliveryComplete(token: IMqttDeliveryToken?) {
+
+            }
+        })
+        val options = MqttConnectOptions()
+        try {
+            mqttClient.connect(options, null, object : IMqttActionListener {
+                override fun onSuccess(asyncActionToken: IMqttToken?) {
+                    Log.d(TAG, "Connection success")
+                }
+
+                override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                    Log.d(TAG, "Connection failure")
+                }
+            })
+        } catch (e: MqttException) {
+            e.printStackTrace()
+        }
+
+    }
+
+
+    // a publish function, ami arra kell majd ha lefoglal vki egy helyet akkor felülirjuk a szenzoradatot.
+    private fun publish(topic: String, msg: String, qos: Int = 1, retained: Boolean = false) {
+        try {
+            val message = MqttMessage()
+            message.payload = msg.toByteArray()
+            message.qos = qos
+            message.isRetained = retained
+            mqttClient.publish(topic, message, null, object : IMqttActionListener {
+                override fun onSuccess(asyncActionToken: IMqttToken?) {
+                    Log.d(TAG, "$msg published to $topic")
+                }
+
+                override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                    Log.d(TAG, "Failed to publish $msg to $topic")
+                }
+            })
+        } catch (e: MqttException) {
+            e.printStackTrace()
+        }
+    }
+
+    // Feliratkozas a megfelelo topicra, a szenzor adatokat kezelni.
+    private fun subscribe(topic: String, qos: Int = 1) {
+        try {
+            mqttClient.subscribe(topic, qos, null, object : IMqttActionListener {
+                override fun onSuccess(asyncActionToken: IMqttToken?) {
+                    Log.d(TAG, "Subscribed to $topic")
+                }
+
+                override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                    Log.d(TAG, "Failed to subscribe $topic")
+                }
+            })
+        } catch (e: MqttException) {
+            e.printStackTrace()
+        }
+    }
+
+    private fun receiveMessages() {
+        mqttClient.setCallback(object : MqttCallback {
+            override fun connectionLost(cause: Throwable) {
+                //connectionStatus = false
+                // Give your callback on failure here
+            }override fun messageArrived(topic: String, message: MqttMessage) {
+                try {
+                    val data = String(message.payload, charset("UTF-8"))
+                    // Give your callback on message received here
+                } catch (e: Exception) {
+                    // Give your callback on error here
+                }
+            }override fun deliveryComplete(token: IMqttDeliveryToken) {
+                // Acknowledgement on delivery complete
+            }
+        })
+
+    }
+
+
 }
