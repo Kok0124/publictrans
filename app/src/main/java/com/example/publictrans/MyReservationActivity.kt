@@ -33,17 +33,58 @@ class MyReservationActivity : AppCompatActivity() {
         val resTrue=this.intent.getIntExtra(MyReservationActivity.RESERVEDTRUE, -1)
         if(resTrue==1) {
 
-            //TODO:ez így jó?
             val date = findViewById<TextView>(R.id.Date)
-            val day=this.intent.getIntExtra(ParkoloActivity.DAY,0).toString()
-            val m=this.intent.getIntExtra(ParkoloActivity.MONTH,0)
-            val year=this.intent.getIntExtra(ParkoloActivity.YEAR,0).toString()
-            val hour=this.intent.getIntExtra(ParkoloActivity.HOUR,0).toString()
-            val minute=this.intent.getIntExtra(ParkoloActivity.MINUTE,0).toString()
-            val helper=m+1
-            val month=helper.toString()
-            date.text="$year.$month.$day $hour:$minute"
+            val endDate = findViewById<TextView>(R.id.endDate)
+
+
+            var day=this.intent.getIntExtra(ParkoloActivity.DAY,0)
+            var month=this.intent.getIntExtra(ParkoloActivity.MONTH,0)
+            month+=1
+            val year=this.intent.getIntExtra(ParkoloActivity.YEAR,0)
+            var hour=this.intent.getIntExtra(ParkoloActivity.HOUR,0)
+            var minute=this.intent.getIntExtra(ParkoloActivity.MINUTE,0)
+
+            val yearSt=year.toString()
+
+            var monthSt=month.toString()
+            if (month<10) {
+                monthSt="0$monthSt"
+            }
+
+            var daySt=day.toString()
+            if (day<10) {
+                daySt="0$daySt"
+            }
+
+            var hourSt=hour.toString()
+            if (hour<10) {
+                hourSt="0$hourSt"
+            }
+
+            var minuteSt=minute.toString()
+            if (minute<10) {
+                minuteSt="0$minuteSt"
+            }
+
+
+
+
+            date.text="$yearSt.$monthSt.$daySt $hourSt:$minuteSt"
             date.setTextColor(Color.parseColor("#605F5F"))
+            endDate.setTextColor(Color.parseColor("#605F5F"))
+
+            if(minute>=30){
+                hour+=1
+                minute+=30
+                minute %= 60
+                minuteSt=minute.toString()
+                hourSt=hour.toString()
+            }
+            else{
+                minute+=30
+                minuteSt=minute.toString()
+            }
+            endDate.text="$yearSt.$monthSt.$daySt $hourSt:$minuteSt"
 
             val parkingLot = findViewById<TextView>(R.id.parkingLot)
             parkingLot.text = this.intent.getIntExtra(MyReservationActivity.PARKINGLOT, -1).toString()
@@ -62,17 +103,7 @@ class MyReservationActivity : AppCompatActivity() {
 
         val back=findViewById<Button>(R.id.back)
         back.setOnClickListener(){
-            val i = Intent(this, ParkoloActivity::class.java)
-            i.putExtra(ParkoloActivity.NAME, username)
-            i.putExtra(ParkoloActivity.PARKINGLOT, pLot)
-            i.putExtra(ParkoloActivity.YEAR, year2)
-            i.putExtra(ParkoloActivity.MONTH, m2)
-            i.putExtra(ParkoloActivity.DAY, day2)
-            i.putExtra(ParkoloActivity.HOUR, hour2)
-            i.putExtra(ParkoloActivity.MINUTE, minute2)
-            i.putExtra(ParkoloActivity.RESERVEDTRUE, resTrue)
-            i.putExtra(ParkoloActivity.BACK, 1)
-            startActivity(i)
+            finish()
         }
 
     }

@@ -35,7 +35,7 @@ class LoginActivity : AppCompatActivity() {
                 val i = Intent(this@LoginActivity, ParkoloActivity::class.java)
                 i.putExtra(ParkoloActivity.NAME, logInName,)
                 i.putExtra(ParkoloActivity.LOGGED_IN, 1)
-                i.putExtra(ParkoloActivity.RESERVEDTRUE, 0)
+                //i.putExtra(ParkoloActivity.RESERVEDTRUE, 0)
                 i.putExtra(ParkoloActivity.BACK, 0)
                 startActivity(i)
             }

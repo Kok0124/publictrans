@@ -56,24 +56,12 @@
         android:id="@+id/refresh"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="40dp"
         android:text="Refresh"
         android:textColor="#FFFFFF"
         app:backgroundTint="#605F5F"
         app:layout_constraintBottom_toTopOf="@+id/car1"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/reserve"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
-        android:text="Reserve"
-        android:textColor="#FFFFFF"
-        app:backgroundTint="#605F5F"
-        app:layout_constraintBottom_toTopOf="@+id/car2"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -225,5 +213,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/car6" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

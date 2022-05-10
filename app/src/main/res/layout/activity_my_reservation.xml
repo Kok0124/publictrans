@@ -37,12 +37,12 @@
         android:id="@+id/textView13"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="20dp"
         android:text="Reservation:"
+        android:textColor="#605F5F"
         android:textSize="20dp"
         android:textStyle="bold"
-        android:textColor="#605F5F"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/UserName" />
 
@@ -51,10 +51,10 @@
         android:layout_width="73dp"
         android:layout_height="17dp"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="40dp"
-        android:text="Date"
-        android:textStyle="bold"
+        android:layout_marginTop="30dp"
+        android:text="Start date"
         android:textColor="#605F5F"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
@@ -62,24 +62,24 @@
         android:id="@+id/asdaff"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="50dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp"
         android:text="Parking Lot Num."
-        android:textStyle="bold"
         android:textColor="#605F5F"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/Date" />
 
     <TextView
         android:id="@+id/parkingLot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
         android:layout_marginTop="30dp"
-        android:layout_marginEnd="80dp"
 
         android:textColor="#605F5F"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/asdaff" />
 
     <TextView
@@ -93,4 +93,28 @@
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt" />
+
+    <TextView
+        android:id="@+id/endDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="30dp"
+        android:text="You have no reservation"
+        android:textColor="#DD0B0B"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ddate" />
+
+    <TextView
+        android:id="@+id/ddate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginTop="50dp"
+        android:text="End date"
+        android:textColor="#605F5F"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/parkingLot" />
 </androidx.constraintlayout.widget.ConstraintLayout>

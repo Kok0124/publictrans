@@ -4,14 +4,20 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.*
 import androidx.annotation.RequiresApi
+import org.eclipse.paho.android.service.MqttAndroidClient
+import org.eclipse.paho.client.mqttv3.IMqttActionListener
+import org.eclipse.paho.client.mqttv3.IMqttToken
+import org.eclipse.paho.client.mqttv3.MqttException
+import org.eclipse.paho.client.mqttv3.MqttMessage
 import java.util.*
 
 
 class SelectDateActivity : AppCompatActivity() {
 
-
+    private lateinit var mqttClient: MqttAndroidClient
 
     companion object{
         const val KEY_PARKING_LOT="KEY_PARKING_LOT"
@@ -24,9 +30,41 @@ class SelectDateActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_select_date)
 
-        val datePicker= findViewById<DatePicker>(R.id.datePicker)
-        datePicker.minDate = System.currentTimeMillis() - 1000;
-        val timePicker=findViewById<TimePicker>(R.id.timePicker)
+
+        val reservedDate=findViewById<TextView>(R.id.ReserveDate)
+        val calendar = GregorianCalendar.getInstance()
+        val year=calendar.get(Calendar.YEAR)
+        val month=calendar.get(Calendar.MONTH)
+        val day=calendar.get(Calendar.DAY_OF_MONTH)
+        val hour=calendar.get(Calendar.HOUR_OF_DAY)
+        val minute=calendar.get(Calendar.MINUTE)
+
+        val yearSt=year.toString()
+
+        var monthSt=month.toString()
+        if (month<10) {
+            monthSt="0$monthSt"
+        }
+
+        var daySt=day.toString()
+        if (day<10) {
+            daySt="0$daySt"
+        }
+
+        var hourSt=hour.toString()
+        if (hour<10) {
+            hourSt="0$hourSt"
+        }
+
+        var minuteSt=minute.toString()
+        if (minute<10) {
+            minuteSt="0$minuteSt"
+        }
+
+
+        reservedDate.text= "$yearSt.$monthSt.$daySt. $hourSt:$minuteSt"
+
+
 
 
         val parkingLot=this.intent.getIntExtra(KEY_PARKING_LOT, -1)
@@ -37,23 +75,23 @@ class SelectDateActivity : AppCompatActivity() {
 
         val reserveBtn=findViewById<Button>(R.id.reserveBtn)
         reserveBtn.setOnClickListener(){
-            //TODO Reserve: Send msg to the server based on
-            //TODO: Ezeket a változókat kéne a szervernek elküldeni egy stringként; datePicker.year, datePicker.month, datePicker.dayOfMonth,timePicker.minute, timePicker.hour
 
 
 
-            val i = Intent(this, ParkoloActivity::class.java)
-            i.putExtra(ParkoloActivity.LOGGED_IN, 0)
-            i.putExtra(ParkoloActivity.YEAR,datePicker.year)
-            i.putExtra(ParkoloActivity.MONTH,datePicker.month)
-            i.putExtra(ParkoloActivity.DAY,datePicker.dayOfMonth)
-            i.putExtra(ParkoloActivity.MINUTE,timePicker.minute)
-            i.putExtra(ParkoloActivity.HOUR,timePicker.hour)
 
-            i.putExtra(ParkoloActivity.PARKINGLOT,parkingLot)
-            i.putExtra(ParkoloActivity.RESERVEDTRUE,1)
-            i.putExtra(ParkoloActivity.NAME, username)
-            startActivity(i)
+           // val i = Intent(this, ParkoloActivity::class.java)
+           // i.putExtra(ParkoloActivity.LOGGED_IN, 0)
+           // i.putExtra(ParkoloActivity.YEAR,year)
+           // i.putExtra(ParkoloActivity.MONTH,month)
+           // i.putExtra(ParkoloActivity.DAY,day)
+           // i.putExtra(ParkoloActivity.MINUTE,minute)
+           // i.putExtra(ParkoloActivity.HOUR,hour)
+
+           // i.putExtra(ParkoloActivity.PARKINGLOT,parkingLot)
+           // i.putExtra(ParkoloActivity.RESERVEDTRUE,1)
+           // i.putExtra(ParkoloActivity.NAME, username)
+           // startActivity(i)
+            finish()
         }
 
 
@@ -72,5 +110,25 @@ class SelectDateActivity : AppCompatActivity() {
         }
     }
 
+    // a publish function, ami arra kell majd ha lefoglal vki egy helyet akkor felülirjuk a szenzoradatot.
+    private fun publish(topic: String, msg: String, qos: Int = 1, retained: Boolean = false) {
+        try {
+            val message = MqttMessage()
+            message.payload = msg.toByteArray()
+            message.qos = qos
+            message.isRetained = retained
+            mqttClient.publish(topic, message, null, object : IMqttActionListener {
+                override fun onSuccess(asyncActionToken: IMqttToken?) {
+                    Log.d(ParkoloActivity.TAG, "$msg published to $topic")
+                }
+
+                override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
+                    Log.d(ParkoloActivity.TAG, "Failed to publish $msg to $topic")
+                }
+            })
+        } catch (e: MqttException) {
+            e.printStackTrace()
+        }
+    }
 
 }

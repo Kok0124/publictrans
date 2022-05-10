@@ -20,66 +20,55 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <DatePicker
-        android:id="@+id/datePicker"
-        android:layout_width="355dp"
-        android:layout_height="144dp"
-        android:layout_marginTop="100dp"
-        android:calendarViewShown="false"
-        android:datePickerMode="spinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        android:theme="@style/MyDatePicker"
-        />
-
-    <TimePicker
-        android:id="@+id/timePicker"
-        android:layout_width="344dp"
-        android:layout_height="194dp"
-        android:layout_marginTop="16dp"
-        android:numbersBackgroundColor="#020202"
-        android:timePickerMode="spinner"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/datePicker"
-        android:theme="@style/MyDatePicker"
-        />
-
     <Button
         android:id="@+id/reserveBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="48dp"
         android:text="Reserve"
-        app:backgroundTint="#605F5F"
         android:textColor="#FFFFFF"
+        app:backgroundTint="#605F5F"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/timePicker" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textView10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:text="*The reservation's duration is 1hour"
+        android:layout_marginBottom="16dp"
+        android:text="*The reservation's duration is 30mins"
         android:textColor="#605F5F"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/reserveBtn" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/textView11"
+        android:id="@+id/ReserveDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:text="Please select the starting date!"
-        android:textStyle="bold"
-        android:textSize="17dp"
+        android:layout_marginBottom="100dp"
+        android:text="_????"
         android:textColor="#605F5F"
-        app:layout_constraintBottom_toTopOf="@+id/datePicker"
+        android:textSize="25sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toTopOf="@+id/reserveBtn"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+
+    <TextView
+        android:id="@+id/reserveDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
+        android:text="For the following date:"
+        android:textColor="#605F5F"
+        android:textSize="25sp"
+        android:textStyle="bold|italic"
+        app:layout_constraintBottom_toTopOf="@+id/ReserveDate"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 

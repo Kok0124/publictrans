@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.CountDownTimer
+import android.os.PersistableBundle
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
@@ -14,11 +16,18 @@ import org.eclipse.paho.client.mqttv3.MqttMessage
 import android.util.Log
 import org.eclipse.paho.android.service.MqttAndroidClient
 import org.eclipse.paho.client.mqttv3.*
+import java.util.*
 
 class ParkoloActivity : AppCompatActivity() {
     //@SuppressLint("UseCompatLoadingForDrawables")
 
     private lateinit var mqttClient: MqttAndroidClient
+    private var MQTT_MSG : String = "DeafultValue"
+    private var RESERVEDTRUE : Int = 0
+    private var PARKINGLOT : Int = -1
+
+    private lateinit var car1: ImageButton
+    private lateinit var car2: ImageButton
 
 
     companion object{
@@ -29,11 +38,10 @@ class ParkoloActivity : AppCompatActivity() {
         const val DAY="DAY"
         const val HOUR="HOUR"
         const val MINUTE="MINUTE"
-        const val PARKINGLOT="PARKING_LOT"
-        const val RESERVEDTRUE="RESERVEDTRUE"
+        //const val PARKINGLOT="PARKING_LOT"
+        //const val RESERVEDTRUE="RESERVEDTRUE"
         const val BACK="BACK"
         const val TAG = "AndroidMqttClient"
-
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,106 +50,71 @@ class ParkoloActivity : AppCompatActivity() {
 
         connect(this)
 
+
         val loggedIn=this.intent.getIntExtra(LOGGED_IN, -1)
         val back=this.intent.getIntExtra(BACK, -1)
         val username=this.intent.getStringExtra(NAME) //.toString()
-        val pLot=this.intent.getIntExtra(PARKINGLOT, -1)
-        val resTrue=this.intent.getIntExtra(RESERVEDTRUE, -1)
+        //val pLot=this.intent.getIntExtra(PARKINGLOT, -1)
+        //val resTrue=this.intent.getIntExtra(RESERVEDTRUE, -1)
 
-        val day=this.intent.getIntExtra(DAY,0).toString()
-        val m=this.intent.getIntExtra(MONTH,0)
-        val year=this.intent.getIntExtra(YEAR,0).toString()
-        val hour=this.intent.getIntExtra(HOUR,0).toString()
-        val minute=this.intent.getIntExtra(MINUTE,0).toString()
+        val year=this.intent.getIntExtra(YEAR,0)
+        var day=this.intent.getIntExtra(DAY,0)
+        var month=this.intent.getIntExtra(MONTH,0)
+        month += 1
+        var hour=this.intent.getIntExtra(HOUR,0)
+        var minute=this.intent.getIntExtra(MINUTE,0)
 
-        val helper=m+1
-        val month=helper.toString()
+
+
+
+        val yearSt=year.toString()
+
+        var monthSt=month.toString()
+        if (month<10) {
+            monthSt="0$monthSt"
+        }
+
+        var daySt=day.toString()
+        if (day<10) {
+            daySt="0$daySt"
+        }
+
+        var hourSt=hour.toString()
+        if (hour<10) {
+            hourSt="0$hourSt"
+        }
+
+        var minuteSt=minute.toString()
+        if (minute<10) {
+            minuteSt="0$minuteSt"
+        }
+
 
         if(loggedIn==1){
 
             val userName=this.intent.getStringExtra(NAME).toString()
             val msg= "Welcome $userName!"
-            val toast=Toast.makeText(applicationContext, msg, Toast.LENGTH_LONG)
+            val toast=Toast.makeText(applicationContext, msg, Toast.LENGTH_SHORT)
             toast.show()
         }
         else if(back==1){
 
         }
         else{
-            val msg= "$year.$month.$day $hour:$minute"
+            val msg= "$yearSt.$monthSt.$daySt. $hourSt:$minuteSt"
             val toast=Toast.makeText(applicationContext, msg, Toast.LENGTH_LONG)
             toast.show()
         }
 
-        val car1 =findViewById<ImageButton>(R.id.car1)
-        val car2 =findViewById<ImageButton>(R.id.car2)
+        car1 =findViewById<ImageButton>(R.id.car1)
+        car2 =findViewById<ImageButton>(R.id.car2)
         val car3 =findViewById<ImageButton>(R.id.car3)
         val car4 =findViewById<ImageButton>(R.id.car4)
         val car5 =findViewById<ImageButton>(R.id.car5)
         val car6 =findViewById<ImageButton>(R.id.car6)
 
-
-        //Refresh
-        val refresh = findViewById<Button>(R.id.refresh)
-        refresh.setOnClickListener{
-            //TODO: Communicate with MQTT!!!
-
-            // Ez itt teszt volt, átmegy az üzenet. Ami kell még hogy subscribe alapján állitsa be a foglaltsagot
-            // Nem tudom pontosan milyen adat jön a szenzorból, ezt majd akkor tudjuk csak emgcisnálni majd
-            subscribe("testtopic/tesztelem")
-
-
-
-
-            //TODO: Make changes accordingly
-            //ez már itt a logika az IF argumentumába kéne betenni azt, hogy bent van e az autó az adott helyen vagy sem
-            if(true){
-                car1.setImageResource(R.drawable.greencar)
-            }
-            else{
-                car1.setImageResource(R.drawable.redcar)
-            }
-
-            if(true){
-                car2.setImageResource(R.drawable.greencar)
-            }
-            else{
-                car2.setImageResource(R.drawable.redcar)
-            }
-
-            if(true){
-                car3.setImageResource(R.drawable.greencar)
-            }
-            else{
-                car3.setImageResource(R.drawable.redcar)
-            }
-
-            if(true){
-                car4.setImageResource(R.drawable.greencar)
-            }
-            else{
-                car4.setImageResource(R.drawable.redcar)
-            }
-
-            if(true){
-                car5.setImageResource(R.drawable.greencar)
-            }
-            else{
-                car5.setImageResource(R.drawable.redcar)
-            }
-
-            if(true){
-                car6.setImageResource(R.drawable.greencar)
-            }
-            else{
-                car6.setImageResource(R.drawable.redcar)
-            }
-
-
-            
-        //temp. "solution"
-        //car1.setImageResource(R.drawable.greencar)
-        }
+        refreshCar1("1_0")
+        refreshCar1("2_0")
 
 
         val day2=this.intent.getIntExtra(DAY,0)
@@ -154,72 +127,148 @@ class ParkoloActivity : AppCompatActivity() {
         myReservation.setOnClickListener(){
             val i = Intent(this, MyReservationActivity::class.java)
             i.putExtra(MyReservationActivity.NAME, username)
-            i.putExtra(MyReservationActivity.PARKINGLOT, pLot)
-            i.putExtra(MyReservationActivity.RESERVEDTRUE, resTrue)
-            i.putExtra(MyReservationActivity.YEAR, year2)
-            i.putExtra(MyReservationActivity.MONTH, month2)
-            i.putExtra(MyReservationActivity.DAY, day2)
-            i.putExtra(MyReservationActivity.HOUR, hour2)
-            i.putExtra(MyReservationActivity.MINUTE, minute2)
+            i.putExtra(MyReservationActivity.PARKINGLOT, PARKINGLOT)
+            i.putExtra(MyReservationActivity.RESERVEDTRUE, RESERVEDTRUE)
+            i.putExtra(MyReservationActivity.YEAR, Calendar.getInstance().get(Calendar.YEAR))
+            i.putExtra(MyReservationActivity.MONTH, Calendar.getInstance().get(Calendar.MONTH))
+            i.putExtra(MyReservationActivity.DAY, Calendar.getInstance().get(Calendar.DAY_OF_MONTH))
+            i.putExtra(MyReservationActivity.HOUR, Calendar.getInstance().get(Calendar.HOUR_OF_DAY))
+            i.putExtra(MyReservationActivity.MINUTE, Calendar.getInstance().get(Calendar.MINUTE))
             startActivity(i)
         }
 
-        //Go to the reservation page
-        val reserve =findViewById<Button>(R.id.reserve)
-        reserve.setOnClickListener{
-            val i=Intent(this, ReserveActivity::class.java)
-            i.putExtra(ReserveActivity.NAME,username)
-            startActivity(i)
-        }
 
-        car1.setOnClickListener{
-            val i = Intent(this, SelectDateActivity::class.java)
-            i.putExtra(SelectDateActivity.KEY_PARKING_LOT, 1)
-            i.putExtra(SelectDateActivity.NAME,username)
-            startActivity(i)
+        car1.setOnClickListener {
+            var carImage1 = car1.tag
+            if (carImage1 == "Green") {
+
+                val i = Intent(this, SelectDateActivity::class.java)
+                i.putExtra(SelectDateActivity.KEY_PARKING_LOT, 1)
+                i.putExtra(SelectDateActivity.NAME, username)
+
+                startActivity(i)
+
+                PARKINGLOT = 1
+                RESERVEDTRUE = 1
+
+                val msg= "1_1" //foglaló üzenet
+                val topic="testtopic/tesztelem"
+                publish(topic,msg)
+
+                val timer = object : CountDownTimer(30000, 1000) {
+                    override fun onTick(p0: Long) {
+
+                    }
+
+
+                    override fun onFinish() {
+                        refreshCar1("1_0")
+                    }
+                }.start()
+
+
+            }
         }
 
         car2.setOnClickListener{
-            val i = Intent(this, SelectDateActivity::class.java)
-            i.putExtra(SelectDateActivity.KEY_PARKING_LOT, 2)
-            i.putExtra(SelectDateActivity.NAME,username)
-            startActivity(i)
+            var carImage2 = car2.tag
+            if (carImage2 == "Green") {
+                val i = Intent(this, SelectDateActivity::class.java)
+                i.putExtra(SelectDateActivity.KEY_PARKING_LOT, 2)
+                i.putExtra(SelectDateActivity.NAME,username)
+                startActivity(i)
+
+                PARKINGLOT = 2
+                RESERVEDTRUE = 1
+
+                val msg= "2_1" //foglaló üzenet
+                val topic="testtopic/tesztelem"
+                publish(topic,msg)
+
+                val timer = object : CountDownTimer(30000, 1000) {
+                    override fun onTick(p0: Long) {
+
+                    }
+
+
+                    override fun onFinish() {
+                        refreshCar1("2_0")
+                    }
+                }.start()
+
+            }
         }
 
         car3.setOnClickListener{
-            val i = Intent(this, SelectDateActivity::class.java)
-            i.putExtra(SelectDateActivity.KEY_PARKING_LOT, 3)
-            i.putExtra(SelectDateActivity.NAME,username)
-            startActivity(i)
+            var carImage3 = car3.tag
+            if (carImage3 == "Green") {
+                val i = Intent(this, SelectDateActivity::class.java)
+                i.putExtra(SelectDateActivity.KEY_PARKING_LOT, 3)
+                i.putExtra(SelectDateActivity.NAME, username)
+                startActivity(i)
+            }
         }
 
         car4.setOnClickListener{
-            val i = Intent(this, SelectDateActivity::class.java)
-            i.putExtra(SelectDateActivity.KEY_PARKING_LOT, 4)
-            i.putExtra(SelectDateActivity.NAME,username)
-            startActivity(i)
+            var carImage4 = car4.tag
+            if (carImage4 == "Green") {
+                val i = Intent(this, SelectDateActivity::class.java)
+                i.putExtra(SelectDateActivity.KEY_PARKING_LOT, 4)
+                i.putExtra(SelectDateActivity.NAME, username)
+                startActivity(i)
+            }
         }
 
         car5.setOnClickListener{
-            val i = Intent(this, SelectDateActivity::class.java)
-            i.putExtra(SelectDateActivity.KEY_PARKING_LOT, 5)
-            i.putExtra(SelectDateActivity.NAME,username)
-            startActivity(i)
+            var carImage5 = car5.tag
+            if (carImage5 == "Green") {
+                val i = Intent(this, SelectDateActivity::class.java)
+                i.putExtra(SelectDateActivity.KEY_PARKING_LOT, 5)
+                i.putExtra(SelectDateActivity.NAME, username)
+                startActivity(i)
+            }
         }
 
         car6.setOnClickListener{
-            val i = Intent(this, SelectDateActivity::class.java)
-            i.putExtra(SelectDateActivity.KEY_PARKING_LOT, 6)
-            i.putExtra(SelectDateActivity.NAME,username)
-            startActivity(i)
+            var carImage6 = car6.tag
+            if (carImage6 == "Green") {
+                val i = Intent(this, SelectDateActivity::class.java)
+                i.putExtra(SelectDateActivity.KEY_PARKING_LOT, 6)
+                i.putExtra(SelectDateActivity.NAME, username)
+                startActivity(i)
+            }
         }
+
+
 
 
     }
 
-    private fun printmsg(msg : String) {
-        print(msg)
 
+
+
+    private fun refreshCar1(str: String) {
+        when (str) {
+            "1_0" -> {
+                car1.setImageResource(R.drawable.greencar)
+                car1.tag = "Green"
+            }
+            "1_1" -> {
+                car1.setImageResource(R.drawable.redcar)
+                car1.tag = "Red"
+            }
+            "2_0" -> {
+                car2.setImageResource(R.drawable.greencar)
+                car2.tag = "Green"
+            }
+            "2_1" -> {
+                car2.setImageResource(R.drawable.redcar)
+                car2.tag = "Green"
+            }
+            else -> {
+                return;
+            }
+        }
     }
 
     private fun connect(context: Context) {
@@ -228,7 +277,10 @@ class ParkoloActivity : AppCompatActivity() {
         mqttClient.setCallback(object : MqttCallback {
             override fun messageArrived(topic: String?, message: MqttMessage?) {
                 Log.d(TAG, "Receive message: ${message.toString()} from topic: $topic")
-                printmsg(message.toString())
+                MQTT_MSG = message.toString()
+                //finish()
+                //startActivity(getIntent());
+                refreshCar1(MQTT_MSG)
             }
 
             override fun connectionLost(cause: Throwable?) {
@@ -244,6 +296,8 @@ class ParkoloActivity : AppCompatActivity() {
             mqttClient.connect(options, null, object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
                     Log.d(TAG, "Connection success")
+                    subscribe("testtopic/tesztelem")
+
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
@@ -267,6 +321,7 @@ class ParkoloActivity : AppCompatActivity() {
             mqttClient.publish(topic, message, null, object : IMqttActionListener {
                 override fun onSuccess(asyncActionToken: IMqttToken?) {
                     Log.d(TAG, "$msg published to $topic")
+                    refreshCar1(msg)
                 }
 
                 override fun onFailure(asyncActionToken: IMqttToken?, exception: Throwable?) {
@@ -313,6 +368,5 @@ class ParkoloActivity : AppCompatActivity() {
         })
 
     }
-
 
 }
